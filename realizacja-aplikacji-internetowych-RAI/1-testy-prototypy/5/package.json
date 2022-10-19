@@ -1,0 +1,21 @@
+{
+  "name": "rai---1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.19.3",
+    "@babel/preset-env": "^7.19.4",
+    "chai": "^4.3.6",
+    "mocha": "^10.1.0"
+  }
+}
