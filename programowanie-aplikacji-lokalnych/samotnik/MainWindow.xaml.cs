@@ -23,6 +23,20 @@ namespace samotnik
         public MainWindow()
         {
             InitializeComponent();
+            var grid = FindName("MainGrid");
+
+            var button = new Button();
+            button.Width = 40;
+            button.Height = 40;
+            button.HorizontalAlignment = HorizontalAlignment.Left;
+            button.VerticalAlignment = VerticalAlignment.Top;
+            var margin = new Thickness();
+            margin.Top = 200;
+            margin.Left = 200;
+
+            button.Margin = margin;
+
+            this.MainGrid.Children.Add(button);
         }
     }
 }
