@@ -1,3 +1,5 @@
+'use strict';
+
 const Rental = require('./Rental');
 const Car = require('./Car');
 

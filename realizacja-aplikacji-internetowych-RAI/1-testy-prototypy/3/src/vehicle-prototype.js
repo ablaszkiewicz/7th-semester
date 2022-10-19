@@ -1,3 +1,5 @@
+'use strict';
+
 function Vehicle(id) {
   this.id = id;
   this.maxVelocity = 0;

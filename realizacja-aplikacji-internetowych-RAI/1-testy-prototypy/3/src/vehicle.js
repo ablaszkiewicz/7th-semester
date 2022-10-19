@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function (id) {
   this.id = id;
   this.maxVelocity = 0;

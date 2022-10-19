@@ -1,3 +1,5 @@
+'use strict';
+
 const Dealership = require('./Dealership');
 const Car = require('./Car');
 

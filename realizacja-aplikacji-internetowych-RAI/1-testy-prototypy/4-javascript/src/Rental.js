@@ -1,3 +1,5 @@
+'use strict';
+
 class Rental {
   constructor(car, startDate, endDate) {
     this.car = car;

@@ -33,9 +33,4 @@ describe('vehicle prototype tests', () => {
     const vehicle = new Vehicle(0);
     expect(vehicle._prototype).equal(undefined);
   });
-
-  it('should check availabivlity of field "constructor"', () => {
-    const vehicle = new Vehicle(0);
-    expect(vehicle.constructor).equal(Vehicle);
-  });
 });

@@ -1,3 +1,5 @@
+'use strict';
+
 class Car {
   constructor(id, totalKilometers, maxPassengers, damages, pricePerDay) {
     this.id = id;
