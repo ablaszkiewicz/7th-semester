@@ -40,7 +40,7 @@ namespace procesy
             if (String.IsNullOrEmpty(txtFilter.Text))
                 return true;
             else
-                return ((item as User).Name.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+                return ((item as Process).ProcessName.IndexOf(txtFilter.Text, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
         private void txtFilter_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
