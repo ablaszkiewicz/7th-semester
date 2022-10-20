@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,12 +27,9 @@ namespace procesy
         public MainWindow()
         {
             InitializeComponent();
-            List<User> items = new List<User>();
-            items.Add(new User() { Name = "John Doe", Age = 42, Sex = SexType.Male });
-            items.Add(new User() { Name = "Jane Doe", Age = 39, Sex = SexType.Female });
-            items.Add(new User() { Name = "Sammy Doe", Age = 13, Sex = SexType.Male });
-            items.Add(new User() { Name = "Donna Doe", Age = 13, Sex = SexType.Female });
-            lvUsers.ItemsSource = items;
+
+            var processes = Process.GetProcesses();
+            lvUsers.ItemsSource = processes;
 
             var view = (CollectionView)CollectionViewSource.GetDefaultView(lvUsers.ItemsSource);
             view.Filter = UserFilter;

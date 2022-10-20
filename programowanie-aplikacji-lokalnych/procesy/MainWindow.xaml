@@ -11,19 +11,34 @@
         <ListView Name="lvUsers">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Width="120" DisplayMemberBinding="{Binding Name}">
+                    <GridViewColumn Width="120" DisplayMemberBinding="{Binding ProcessName}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="Name" Click="lvUsersColumnHeader_Click">Name</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="ProcessName" Click="lvUsersColumnHeader_Click">ProcessName</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding Age}">
+                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding MachineName}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="Age" Click="lvUsersColumnHeader_Click">Age</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="MachineName" Click="lvUsersColumnHeader_Click">MachineName</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
-                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding Sex}">
+                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding BasePriority}">
                         <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="Sex" Click="lvUsersColumnHeader_Click">Sex</GridViewColumnHeader>
+                            <GridViewColumnHeader Tag="BasePriority" Click="lvUsersColumnHeader_Click">BasePriority</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding PriorityClass}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="PriorityClass" Click="lvUsersColumnHeader_Click">PriorityClass</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding TotalProcessorTime}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="TotalProcessorTime" Click="lvUsersColumnHeader_Click">TotalProcessorTime</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding WorkingSet64}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="WorkingSet64" Click="lvUsersColumnHeader_Click">WorkingSet64</GridViewColumnHeader>
                         </GridViewColumn.Header>
                     </GridViewColumn>
                 </GridView>
