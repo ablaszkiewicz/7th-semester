@@ -16,21 +16,23 @@ describe('vehicle methods tests', () => {
 
   it('should check if start() method works', () => {
     const vehicle = new Vehicle(0, 0, 0);
-    const expectedStatus = 'STATUS: id=0 maxVelocity=10 velocity=10';
+    const expectedVelocity = 10;
+    const expectedMaxVelocity = 10;
     vehicle.start(10);
-    const status = vehicle.status();
 
-    expect(status).equal(expectedStatus);
+    expect(vehicle.getVelocity()).equal(expectedVelocity);
+    expect(vehicle.getMaxVelocity()).equal(expectedMaxVelocity);
   });
 
   it('should check if stop() method works', () => {
     const vehicle = new Vehicle(0, 0, 0);
-    const expectedStatus = 'STATUS: id=0 maxVelocity=10 velocity=0';
+    const expectedVelocity = 0;
+    const expectedMaxVelocity = 10;
     vehicle.start(10);
     vehicle.stop();
-    const status = vehicle.status();
 
-    expect(status).equal(expectedStatus);
+    expect(vehicle.getVelocity()).equal(expectedVelocity);
+    expect(vehicle.getMaxVelocity()).equal(expectedMaxVelocity);
   });
 });
 
@@ -54,9 +56,9 @@ describe('vehicle fields tests', () => {
 describe('vehicle logic tests', () => {
   it('should check if maxVelocity is updated', () => {
     const vehicle = new Vehicle(0, 0, 0);
-    const expectedStatus = 'STATUS: id=0 maxVelocity=20 velocity=20';
+    const expectedMaxVelocity = 20;
     vehicle.start(10);
     vehicle.start(20);
-    expect(vehicle.status()).equal(expectedStatus);
+    expect(vehicle.getMaxVelocity()).equal(expectedMaxVelocity);
   });
 });
