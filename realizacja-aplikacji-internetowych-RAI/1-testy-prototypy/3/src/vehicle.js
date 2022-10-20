@@ -1,19 +1,27 @@
 'use strict';
 
-module.exports = function (id) {
-  this.id = id;
-  this.maxVelocity = 0;
-  this.velocity = 0;
+module.exports = function (id, maxVelocity, velocity) {
   this.status = function () {
-    return `STATUS: id=${this.id} maxVelocity=${this.maxVelocity} velocity=${this.velocity}`;
+    return `STATUS: id=${id} maxVelocity=${maxVelocity} velocity=${velocity}`;
   };
-  this.start = function (velocity) {
-    this.velocity = velocity;
-    if (this.velocity > this.maxVelocity) {
-      this.maxVelocity = this.velocity;
+  this.start = function (newVelocity) {
+    velocity = newVelocity;
+    if (velocity > maxVelocity) {
+      maxVelocity = velocity;
     }
   };
   this.stop = function () {
-    this.velocity = 0;
+    velocity = 0;
+  };
+  this.getMaxVelocity = function () {
+    return maxVelocity;
+  };
+
+  this.getId = function () {
+    return id;
+  };
+
+  this.getVelocity = function () {
+    return velocity;
   };
 };
