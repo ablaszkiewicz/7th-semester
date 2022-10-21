@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace procesy
 {
@@ -24,10 +25,24 @@ namespace procesy
     {
         private GridViewColumnHeader listViewSortCol = null;
         private SortAdorner listViewSortAdorner = null;
+        private Process selectedProcess = null;
+        private DispatcherTimer timer = new();
         public MainWindow()
         {
             InitializeComponent();
 
+            timer.Tick += (s, e) => { 
+                RefreshProcesses();
+                UpdateDetailsWindow(selectedProcess);
+            };
+            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Start();
+
+            RefreshProcesses();
+        }
+
+        private void RefreshProcesses()
+        {
             var processes = Process.GetProcesses();
             lvUsers.ItemsSource = processes;
 
@@ -66,6 +81,69 @@ namespace procesy
             listViewSortAdorner = new SortAdorner(listViewSortCol, newDir);
             AdornerLayer.GetAdornerLayer(listViewSortCol).Add(listViewSortAdorner);
             lvUsers.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+        }
+
+        private void ListViewItem_Click(object sender, MouseButtonEventArgs e)
+        {
+            var item = sender as ListViewItem;
+            if (item == null) return;
+
+            Trace.WriteLine((item.DataContext as Process).ProcessName);
+            UpdateDetailsWindow(item.DataContext as Process);
+            selectedProcess = item.DataContext as Process;
+        }
+
+        private void UpdateDetailsWindow(Process process)
+        {
+            if (process == null) return;
+
+            NameText.Text = process.ProcessName;
+            PriorityClassText.Text = process.PriorityClass.ToString();
+            CpuText.Text = process.TotalProcessorTime.ToString();
+            MemoryText.Text = process.WorkingSet64.ToString();
+        }
+
+        private void KillButton_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshProcesses();
+            selectedProcess.Kill();
+        }
+
+        private void ChangeButton_Click(object sender, RoutedEventArgs e)
+        {
+            Trace.WriteLine(PrioritySelect.Text);
+
+            switch (PrioritySelect.Text)
+            {
+                case "Idle":
+                    selectedProcess.PriorityClass = ProcessPriorityClass.Idle;
+                    break;
+                case "High":
+                    selectedProcess.PriorityClass = ProcessPriorityClass.High;
+                    break;
+            }
+
+            RefreshProcesses();
+            UpdateDetailsWindow(selectedProcess);
+        }
+
+        private void Interval_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            timer.Stop();
+            timer.Interval = new TimeSpan(0, 0, int.Parse(Interval.Text));
+            timer.Start();
+        }
+
+        private void AutoRefreshCheckbox_Click(object sender, RoutedEventArgs e)
+        {
+            if ((bool)AutoRefreshCheckbox.IsChecked)
+            {
+                timer.Start();
+            }
+            else
+            {
+                timer.Stop();
+            }
         }
     }
 

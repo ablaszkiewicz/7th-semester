@@ -5,44 +5,76 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:procesy"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <DockPanel Margin="10">
-        <TextBox DockPanel.Dock="Top" Margin="0,0,0,10" Name="txtFilter" TextChanged="txtFilter_TextChanged" />
-        <ListView Name="lvUsers">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Width="120" DisplayMemberBinding="{Binding ProcessName}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="ProcessName" Click="lvUsersColumnHeader_Click">ProcessName</GridViewColumnHeader>
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
-                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding MachineName}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="MachineName" Click="lvUsersColumnHeader_Click">MachineName</GridViewColumnHeader>
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
-                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding BasePriority}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="BasePriority" Click="lvUsersColumnHeader_Click">BasePriority</GridViewColumnHeader>
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
-                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding PriorityClass}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="PriorityClass" Click="lvUsersColumnHeader_Click">PriorityClass</GridViewColumnHeader>
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
-                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding TotalProcessorTime}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="TotalProcessorTime" Click="lvUsersColumnHeader_Click">TotalProcessorTime</GridViewColumnHeader>
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
-                    <GridViewColumn Width="80" DisplayMemberBinding="{Binding WorkingSet64}">
-                        <GridViewColumn.Header>
-                            <GridViewColumnHeader Tag="WorkingSet64" Click="lvUsersColumnHeader_Click">WorkingSet64</GridViewColumnHeader>
-                        </GridViewColumn.Header>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        Title="MainWindow" Height="450" Width="650">
+    <DockPanel>
+        <DockPanel Margin="10">
+            <TextBox DockPanel.Dock="Top" Margin="0,0,0,10" Name="txtFilter" TextChanged="txtFilter_TextChanged" />
+            <WrapPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
+                <TextBlock Margin="0,0,10,0">Interval</TextBlock>
+                <TextBox Name="Interval" Width="50" TextChanged="Interval_TextChanged">1</TextBox>
+                <CheckBox x:Name="AutoRefreshCheckbox" IsChecked="True" Click="AutoRefreshCheckbox_Click">Enable auto refresh</CheckBox>
+            </WrapPanel>
+            
+            <ListView Name="lvUsers">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="120" DisplayMemberBinding="{Binding ProcessName}">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="ProcessName" Click="lvUsersColumnHeader_Click">Name</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                        <GridViewColumn Width="80" DisplayMemberBinding="{Binding PriorityClass}">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="PriorityClass" Click="lvUsersColumnHeader_Click">PriorityClass</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                        <GridViewColumn Width="80" DisplayMemberBinding="{Binding TotalProcessorTime}">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="TotalProcessorTime" Click="lvUsersColumnHeader_Click">Cpu</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                        <GridViewColumn Width="80" DisplayMemberBinding="{Binding WorkingSet64}">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Tag="WorkingSet64" Click="lvUsersColumnHeader_Click">Memory</GridViewColumnHeader>
+                            </GridViewColumn.Header>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <EventSetter Event="MouseLeftButtonUp"  Handler="ListViewItem_Click" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </DockPanel>
+        <DockPanel Margin="10">
+            <TextBlock FontWeight="Bold" DockPanel.Dock="Top">Chosen process</TextBlock>
+            <Button DockPanel.Dock="Bottom" Click="KillButton_Click">Kill</Button>
+            <Button DockPanel.Dock="Bottom" Click="ChangeButton_Click">Set priority</Button>
+            <ComboBox DockPanel.Dock="Bottom" Name="PrioritySelect">
+                <ComboBoxItem IsSelected="True">Idle</ComboBoxItem>
+                <ComboBoxItem>High</ComboBoxItem>
+            </ComboBox>
+            
+            <StackPanel>
+                <WrapPanel>
+                    <TextBlock>Name:</TextBlock>
+                    <TextBlock x:Name="NameText"></TextBlock>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock>PriorityClass:</TextBlock>
+                    <TextBlock x:Name="PriorityClassText"></TextBlock>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock>Cpu:</TextBlock>
+                    <TextBlock x:Name="CpuText"></TextBlock>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock>Memory:</TextBlock>
+                    <TextBlock x:Name="MemoryText"></TextBlock>
+                </WrapPanel>
+            </StackPanel>
+
+        </DockPanel>
     </DockPanel>
 </Window>
