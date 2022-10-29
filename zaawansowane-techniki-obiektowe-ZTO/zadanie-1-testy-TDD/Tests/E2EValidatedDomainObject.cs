@@ -49,11 +49,11 @@ namespace Tests
     }
 
 
-    public class ValidationTests
+    public class MockValidationTests
     {
         private readonly ITestOutputHelper output;
             
-        public ValidationTests(ITestOutputHelper output)
+        public MockValidationTests(ITestOutputHelper output)
         {
             this.output = output;
         }
@@ -72,7 +72,6 @@ namespace Tests
         {
             var mock = new MockValidatedObject("", "");
             var brokenBy = mock.Validate();
-            var rule = brokenBy.ToList().FirstOrDefault();
 
             Assert.False(brokenBy.IsEmpty());
         }
