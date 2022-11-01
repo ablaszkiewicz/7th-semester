@@ -17,6 +17,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Moq" Version="4.18.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TDDLab.Core\TDDLab.Core.csproj" />
+    <ProjectReference Include="..\BasicUtils\BasicUtils.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Moq" />
+  </ItemGroup>
 </Project>
