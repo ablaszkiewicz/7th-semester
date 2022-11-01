@@ -125,9 +125,19 @@ namespace samotnik
 
         private bool ButtonsFollowRule(MyButton last, MyButton next)
         {
-            return (last.X == next.X && Math.Abs(last.Y - next.Y) == 2
-                || last.Y == next.Y && Math.Abs(last.X - next.X) == 2);
+            var xDifference = Math.Abs(last.X - next.X);
+            var yDifference = Math.Abs(last.Y - next.Y);
 
+            var centerX = (last.X + next.X) / 2;
+            var centerY = (last.Y + next.Y) / 2;
+
+            if (!(last.X == next.X && yDifference == 2
+                || last.Y == next.Y && xDifference == 2))
+                return false;
+
+            var center = buttons.Where(button => button.X == centerX && button.Y == centerY).FirstOrDefault();
+
+            return center.IsPawn;
         }
 
         private MyButton GetButtonBetweenButtons(MyButton last, MyButton next)
