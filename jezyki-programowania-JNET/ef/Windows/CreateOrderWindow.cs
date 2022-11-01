@@ -76,7 +76,7 @@ namespace proj.Windows
 
             foreach(var itemQuantity in items)
             {
-                var orderItem = new ItemsOrders() { ItemId = itemQuantity.ItemId, OrderId = order.Id };
+                var orderItem = new ItemsOrders() { ItemId = itemQuantity.ItemId, OrderId = order.Id, Quantity = itemQuantity.Quantity };
                 db.ItemsOrders.Add(orderItem);
             }
 

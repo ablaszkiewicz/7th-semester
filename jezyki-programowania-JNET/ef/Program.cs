@@ -8,6 +8,8 @@ public class Program
 {
     public static void Main()
     {
+        //using var db = new MyContext();
+        //Console.WriteLine(db.DbPath);
         var windowsManager = new WindowsManager();
     }
 }
