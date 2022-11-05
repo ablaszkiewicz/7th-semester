@@ -15,5 +15,11 @@ namespace tsp_shared
         {
             Number = number;
         }
+
+        public Vertex(int number, Vector2 point)
+        {
+            Number = number;
+            Point = point;
+        }
     }
 }

@@ -50,15 +50,77 @@ namespace tsp
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            _pipe.WriteAsync(new MyMessage
-            {
-                Text = "Welcome!"
-            });
+            //_pipe.WriteAsync(new MyMessage
+            //{
+            //    Text = "Welcome!"
+            //});
+
+            DrawCycle(CreateRandomCycle());
         }
 
         private void MessageReceivedFromClient(object sender, ConnectionMessageEventArgs<MyMessage> args)
         {
             Trace.WriteLine($"Client: {args.Message}");
+        }
+
+        public Cycle CreateRandomCycle()
+        {
+            var random = new Random();
+            var vertexes = new List<Vertex>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                var x = random.Next(0, 400);
+                var y = random.Next(0, 400);
+                vertexes.Add(new Vertex(0, new Vector2(x, y)));
+            }
+
+            return new Cycle(vertexes);
+        }
+
+        public void DrawCycle(Cycle cycle)
+        {
+            for (int i = 0; i < cycle.Length; i++)
+            {
+                var currentVertex = cycle.Vertexes[i];
+                var nextVertex = cycle.Vertexes[(i + 1) % cycle.Length];
+
+                DrawLine(currentVertex.Point, nextVertex.Point);
+            }
+
+            foreach(var vertex in cycle.Vertexes)
+            {
+                DrawPoint(vertex.Point);
+            }
+        }
+
+        private void DrawLine(Vector2 pointA, Vector2 pointB)
+        {
+            var line = new Line();
+            line.Stroke = Brushes.Black;
+            line.StrokeThickness = 2;
+
+            line.X1 = pointA.X;
+            line.Y1 = pointA.Y;
+
+            line.X2 = pointB.X;
+            line.Y2 = pointB.Y;
+
+            MyCanvas.Children.Add(line);
+        }
+
+        private void DrawPoint(Vector2 point)
+        {
+            var ellipse = new Ellipse();
+            var radius = 8;
+            ellipse.Fill = Brushes.Red;
+            ellipse.Width = radius;
+            ellipse.Height = radius;
+            var x = point.X - (radius / 2);
+            var y = point.Y - (radius / 2);
+
+            ellipse.Margin = new Thickness(x, y, 0, 0);
+            MyCanvas.Children.Add(ellipse);
         }
     }
 }
