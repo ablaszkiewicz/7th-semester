@@ -15,9 +15,9 @@ namespace tsp_task
     {
         static void Main(string[] args)
         {
-            //var client = new Client("tsp-task");
-            //client.OnMessageReceived += (message) => Console.WriteLine(message.Text);
-            //while (true) { }
+            var client = new Client("tsp-task");
+            client.OnMessageReceived += (message) => Console.WriteLine(message.Text);
+            
 
             var pointsList1 = new List<int>() { 3, 5, 1, 8, 2, 6, 7, 4, 9 };
             var pointsList2 = new List<int>() { 1, 6, 2, 7, 4, 8, 5, 9, 3 };
@@ -48,6 +48,8 @@ namespace tsp_task
             Console.WriteLine();
             Console.WriteLine(cycleB);
             Console.WriteLine(mutatedB);
+
+            while (true) { }
         }
     }
 }
