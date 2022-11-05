@@ -1,26 +1,24 @@
-﻿using H.Pipes.Args;
-using H.Pipes;
+﻿using H.Pipes;
+using H.Pipes.Args;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using tsp;
 
-namespace tsp_task
+namespace tsp_shared
 {
     public class Client
     {
-        public Client()
+        public Action<MyMessage> OnMessageReceived;
+        public Client(string pipeName)
         {
-            Task.Run(async () => await StartClient());
+            Task.Run(async () => await StartClient(pipeName));
         }
 
-        public async Task StartClient()
+        public async Task StartClient(string pipeName)
         {
-            await using var client = new PipeClient<MyMessage>("tsp-task");
+            await using var client = new PipeClient<MyMessage>(pipeName);
             client.MessageReceived += MessageReceivedFromServer;
 
             await client.ConnectAsync();
@@ -30,7 +28,7 @@ namespace tsp_task
 
         private void MessageReceivedFromServer(object sender, ConnectionMessageEventArgs<MyMessage> args)
         {
-            Console.WriteLine($"Client: {args.Message.Text}");
+            OnMessageReceived.Invoke(args.Message);
         }
     }
 }

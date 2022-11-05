@@ -19,6 +19,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using tsp_shared;
 
 namespace tsp
 {
@@ -59,11 +60,5 @@ namespace tsp
         {
             Trace.WriteLine($"Client: {args.Message}");
         }
-    }
-
-    [Serializable]
-    public class MyMessage
-    {
-        public string Text;
     }
 }
