@@ -60,7 +60,7 @@ namespace tsp
             Process.Start("C:\\Users\\Aleksander\\Desktop\\7th-semester\\programowanie-aplikacji-lokalnych\\tsp-task\\bin\\Debug\\net6.0-windows\\tsp-task.exe");
             _pipe.ClientConnected += (a, b) =>
             {
-                _pipe.WriteAsync(new MyMessage { Cycle = cycle });
+                _pipe.WriteAsync(new MyMessage { Type = MessageType.START, Cycle = cycle });
             };
         }
 
@@ -71,8 +71,16 @@ namespace tsp
 
         private void MessageReceivedFromClient(object sender, ConnectionMessageEventArgs<MyMessage> args)
         {
-            ;
-            Application.Current.Dispatcher.Invoke(() => DrawCycle(args.Message.Cycle));
+            var message = args.Message;
+            
+            if(message.Type == MessageType.BEST_SOLUTION)
+            {
+                Application.Current.Dispatcher.Invoke(() => DrawCycle(args.Message.Cycle));
+            }
+            else if (message.Type == MessageType.PROGRESS)
+            {
+                Application.Current.Dispatcher.Invoke(() => ProgressBar.Value = message.Progress * 100);
+            }
         }
 
         public Cycle CreateRandomCycle()
@@ -139,14 +147,14 @@ namespace tsp
 
         private double ClampXToScreen(double x)
         {
-            var val = Utilities.StrangeClamp(x, minX, maxX, (double)0, MyCanvas.ActualWidth);
+            var val = Utilities.StrangeClamp(x, minX, maxX, 0, MyCanvas.ActualWidth);
             ;
             return val;
         }
         
         private double ClampYToScreen(double y)
         {
-            return Utilities.StrangeClamp(y, minY, maxY, (double)0, MyCanvas.ActualHeight);
+            return Utilities.StrangeClamp(y, minY, maxY, 0, MyCanvas.ActualHeight);
         }
     }
 }

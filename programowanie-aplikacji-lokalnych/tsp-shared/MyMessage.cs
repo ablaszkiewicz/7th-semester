@@ -3,8 +3,17 @@
     [Serializable]
     public class MyMessage
     {
-        public string Text { get; set; }
-
         public Cycle Cycle { get; set; }
+        public MessageType Type { get; set; }
+        
+        public double Progress { get; set; }
+    }
+
+    [Serializable]
+    public enum MessageType
+    {
+        START,
+        PROGRESS,
+        BEST_SOLUTION
     }
 }

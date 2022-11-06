@@ -20,8 +20,9 @@ namespace tsp_task
             {
                 Console.WriteLine("Starting calculations...");
                 Cycle best = null;
+                var iterationsCount = 1000000;
 
-                for (int i = 0; i < 10000000; i++)
+                for (int i = 0; i < iterationsCount; i++)
                 {
                     var a = message.Cycle.GetShuffledCopy();
                     var b = message.Cycle.GetShuffledCopy();
@@ -31,16 +32,19 @@ namespace tsp_task
 
                     var localBest = mutatedA.CalculateTotalDistance() < mutatedB.CalculateTotalDistance() ? mutatedA : mutatedB;
 
-                    Console.WriteLine(localBest + " = " + localBest.CalculateTotalDistance());
+                    //Console.WriteLine(localBest + " = " + localBest.CalculateTotalDistance());
+
+                    if (i % 100 == 0)
+                    {
+                        client.SendMessage(new MyMessage { Type = MessageType.PROGRESS, Progress = (double)i / iterationsCount });
+                    }
 
                     if (best == null || localBest.CalculateTotalDistance() < best.CalculateTotalDistance())
                     {
                         best = localBest;
-                        client.SendMessage(new MyMessage { Cycle = best });
+                        client.SendMessage(new MyMessage { Type = MessageType.BEST_SOLUTION, Cycle = best });
                     }
                 }
-
-                client.SendMessage(new MyMessage { Cycle = best });
             };
 
 

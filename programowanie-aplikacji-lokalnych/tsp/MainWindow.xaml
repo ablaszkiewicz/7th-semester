@@ -39,6 +39,10 @@
                     <Button Name="StartButton" Content="Start" DockPanel.Dock="Right" Width="72" Click="StartButton_Click"/>
                 </DockPanel>
             </Border>
+            <Border BorderBrush="Black" BorderThickness="1" Padding="10"  Margin="0,5,0,0" >
+                <ProgressBar Name="ProgressBar" Height="20" />
+            </Border>
+            
         </StackPanel>
 
     </Grid>
