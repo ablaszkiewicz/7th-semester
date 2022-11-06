@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace tsp_shared
 {
+    [Serializable]
     public class Cycle
     {
         public List<Vertex> Vertexes { get; set; }
@@ -62,6 +63,29 @@ namespace tsp_shared
                     return;
                 }
             }
+        }
+
+        public double CalculateTotalDistance()
+        {
+            double distance = 0;
+
+            for(int i=0; i < Vertexes.Count; i++)
+            {
+                var current = Vertexes[i];
+                var next = Vertexes[(i + 1) % Vertexes.Count];
+
+                distance += current.Point.Distance(next.Point);
+            }
+
+            return distance;
+        }
+
+        public Cycle GetShuffledCopy()
+        {
+            var vertexesCopy = new List<Vertex>(Vertexes);
+            vertexesCopy.Shuffle();
+
+            return new Cycle(vertexesCopy);
         }
     }
 }

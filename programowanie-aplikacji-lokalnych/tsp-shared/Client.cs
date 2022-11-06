@@ -11,6 +11,8 @@ namespace tsp_shared
     public class Client
     {
         public Action<MyMessage> OnMessageReceived;
+
+        private PipeClient<MyMessage> client;
         public Client(string pipeName)
         {
             Task.Run(async () => await StartClient(pipeName));
@@ -18,10 +20,11 @@ namespace tsp_shared
 
         public async Task StartClient(string pipeName)
         {
-            await using var client = new PipeClient<MyMessage>(pipeName);
-            client.MessageReceived += MessageReceivedFromServer;
+            await using var clientTemp = new PipeClient<MyMessage>(pipeName);
+            this.client = clientTemp;
+            clientTemp.MessageReceived += MessageReceivedFromServer;
 
-            await client.ConnectAsync();
+            await clientTemp.ConnectAsync();
             Console.WriteLine("Connected");
             await Task.Delay(Timeout.InfiniteTimeSpan);
         }
@@ -29,6 +32,11 @@ namespace tsp_shared
         private void MessageReceivedFromServer(object sender, ConnectionMessageEventArgs<MyMessage> args)
         {
             OnMessageReceived.Invoke(args.Message);
+        }
+
+        public void SendMessage(MyMessage message)
+        {
+            client.WriteAsync(message);
         }
     }
 }

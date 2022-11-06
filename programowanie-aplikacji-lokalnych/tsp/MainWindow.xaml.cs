@@ -45,22 +45,22 @@ namespace tsp
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("C:\\Users\\Aleksander\\Desktop\\7th-semester\\programowanie-aplikacji-lokalnych\\tsp-task\\bin\\Debug\\net6.0-windows\\tsp-task.exe", "Wysylam message");
+            Process.Start("C:\\Users\\Aleksander\\Desktop\\7th-semester\\programowanie-aplikacji-lokalnych\\tsp-task\\bin\\Debug\\net6.0-windows\\tsp-task.exe");
         }
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            //_pipe.WriteAsync(new MyMessage
-            //{
-            //    Text = "Welcome!"
-            //});
+            //DrawCycle(CreateRandomCycle());
+            var vertexes = Reader.GetVertexesFromFile("C:\\Users\\Aleksander\\Downloads\\wi29.tsp");
+            var cycle = new Cycle(vertexes);
 
-            DrawCycle(CreateRandomCycle());
+            _pipe.WriteAsync(new MyMessage { Text = "Tu serwer", Cycle = cycle });
         }
 
         private void MessageReceivedFromClient(object sender, ConnectionMessageEventArgs<MyMessage> args)
         {
-            Trace.WriteLine($"Client: {args.Message}");
+            ;
+            Application.Current.Dispatcher.Invoke(() => DrawCycle(args.Message.Cycle));
         }
 
         public Cycle CreateRandomCycle()
@@ -80,6 +80,8 @@ namespace tsp
 
         public void DrawCycle(Cycle cycle)
         {
+            MyCanvas.Children.Clear();
+
             for (int i = 0; i < cycle.Length; i++)
             {
                 var currentVertex = cycle.Vertexes[i];

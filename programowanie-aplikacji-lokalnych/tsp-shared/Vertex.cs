@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace tsp_shared
 {
+    [Serializable]
     public class Vertex
     {
         public Vector2 Point { get; set; }
