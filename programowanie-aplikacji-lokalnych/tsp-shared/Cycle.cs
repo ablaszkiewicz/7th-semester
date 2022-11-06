@@ -87,5 +87,25 @@ namespace tsp_shared
 
             return new Cycle(vertexesCopy);
         }
+
+        public double GetMinX()
+        {
+            return Vertexes.Min(vertex => vertex.Point.X);
+        }
+
+        public double GetMaxX()
+        {
+            return Vertexes.Max(vertex => vertex.Point.X);
+        }
+
+        public double GetMinY()
+        {
+            return Vertexes.Min(vertex => vertex.Point.Y);
+        }
+
+        public double GetMaxY()
+        {
+            return Vertexes.Max(vertex => vertex.Point.Y);
+        }
     }
 }

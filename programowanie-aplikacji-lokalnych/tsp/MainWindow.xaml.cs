@@ -29,10 +29,22 @@ namespace tsp
     public partial class MainWindow : Window
     {
         private PipeServer<MyMessage> _pipe;
+        private double minX;
+        private double minY;
+        private double maxX;
+        private double maxY;
+        private Cycle cycle;
         public MainWindow()
         {
             InitializeComponent();
             Task.Run(async () => await Server());
+
+            var vertexes = Reader.GetVertexesFromFile("C:\\Users\\Aleksander\\Downloads\\wi29.tsp");
+            cycle = new Cycle(vertexes);
+            minX = cycle.GetMinX();
+            minY = cycle.GetMinY();
+            maxX = cycle.GetMaxX();
+            maxY = cycle.GetMaxY();
         }
 
         public async Task Server()
@@ -46,15 +58,15 @@ namespace tsp
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("C:\\Users\\Aleksander\\Desktop\\7th-semester\\programowanie-aplikacji-lokalnych\\tsp-task\\bin\\Debug\\net6.0-windows\\tsp-task.exe");
+            _pipe.ClientConnected += (a, b) =>
+            {
+                _pipe.WriteAsync(new MyMessage { Cycle = cycle });
+            };
         }
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            //DrawCycle(CreateRandomCycle());
-            var vertexes = Reader.GetVertexesFromFile("C:\\Users\\Aleksander\\Downloads\\wi29.tsp");
-            var cycle = new Cycle(vertexes);
-
-            _pipe.WriteAsync(new MyMessage { Text = "Tu serwer", Cycle = cycle });
+            
         }
 
         private void MessageReceivedFromClient(object sender, ConnectionMessageEventArgs<MyMessage> args)
@@ -102,11 +114,11 @@ namespace tsp
             line.Stroke = Brushes.Black;
             line.StrokeThickness = 2;
 
-            line.X1 = pointA.X;
-            line.Y1 = pointA.Y;
+            line.X1 = ClampXToScreen(pointA.X);
+            line.Y1 = ClampYToScreen(pointA.Y);
 
-            line.X2 = pointB.X;
-            line.Y2 = pointB.Y;
+            line.X2 = ClampXToScreen(pointB.X);
+            line.Y2 = ClampYToScreen(pointB.Y);
 
             MyCanvas.Children.Add(line);
         }
@@ -118,11 +130,23 @@ namespace tsp
             ellipse.Fill = Brushes.Red;
             ellipse.Width = radius;
             ellipse.Height = radius;
-            var x = point.X - (radius / 2);
-            var y = point.Y - (radius / 2);
+            var x = ClampXToScreen(point.X) - (radius / 2);
+            var y = ClampYToScreen(point.Y) - (radius / 2);
 
             ellipse.Margin = new Thickness(x, y, 0, 0);
             MyCanvas.Children.Add(ellipse);
+        }
+
+        private double ClampXToScreen(double x)
+        {
+            var val = Utilities.StrangeClamp(x, minX, maxX, (double)0, MyCanvas.ActualWidth);
+            ;
+            return val;
+        }
+        
+        private double ClampYToScreen(double y)
+        {
+            return Utilities.StrangeClamp(y, minY, maxY, (double)0, MyCanvas.ActualHeight);
         }
     }
 }

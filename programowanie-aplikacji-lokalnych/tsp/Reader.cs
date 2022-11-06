@@ -38,8 +38,8 @@ namespace tsp
                 {
                     var numbers = line.Split(' ');
                     var number = int.Parse(numbers[0]);
-                    var x = double.Parse(numbers[1], CultureInfo.InvariantCulture) / 70;
-                    var y = double.Parse(numbers[2], CultureInfo.InvariantCulture) / 70;
+                    var x = double.Parse(numbers[1], CultureInfo.InvariantCulture);
+                    var y = double.Parse(numbers[2], CultureInfo.InvariantCulture);
                     var vertex = new Vertex(number, new Vector2(x, y));
                     vertexes.Add(vertex);
                 }

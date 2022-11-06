@@ -22,5 +22,15 @@ namespace tsp_shared
                 list[n] = value;
             }
         }
+
+        public static double StrangeClamp(this double number, double rangeAMin, double rangeAMax, double rangeBMin, double rangeBMax)
+        {
+            double rangeA = rangeAMax - rangeAMin;
+            double rangeB = rangeBMax - rangeBMin;
+
+            double value = (number - rangeAMin) / rangeA;
+
+            return rangeBMin + (value * rangeB);
+        }
     }
 }
