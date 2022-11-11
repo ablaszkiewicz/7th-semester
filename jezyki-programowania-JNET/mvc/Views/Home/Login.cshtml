@@ -1,0 +1,18 @@
+﻿@model UserModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Login</h1>
+
+    
+    @using (Html.BeginForm("RedirectToUser", "Home", FormMethod.Post))
+    {
+        <form action="/action_page.php">
+            <label for="username">Username:</label>
+            @Html.TextBoxFor(user => user.Username)
+            <input type="submit" value="Submit">
+        </form>
+    }
+</div>

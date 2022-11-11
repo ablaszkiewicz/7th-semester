@@ -22,6 +22,11 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Login}");
+
+//add UserController Index with username parameter
+app.MapControllerRoute(
+    name: "user",
+    pattern: "{controller=User}/{action=Index}/{username?}");
 
 app.Run();

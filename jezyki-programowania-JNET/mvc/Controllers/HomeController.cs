@@ -13,14 +13,15 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    public IActionResult Index()
+    public IActionResult Login()
     {
         return View();
     }
 
-    public IActionResult Privacy()
+    [HttpPost]
+    public IActionResult RedirectToUser()
     {
-        return View();
+        return RedirectToAction("Index", "User", new { username = Request.Form["username"] });
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
