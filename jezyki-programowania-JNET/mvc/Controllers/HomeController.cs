@@ -21,7 +21,14 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult RedirectToUser()
     {
-        return RedirectToAction("Index", "User", new { username = Request.Form["username"] });
+        if (Request.Form["username"] == "admin")
+        {
+            return RedirectToAction("Index", "Admin", new { username = Request.Form["username"] });
+        }
+        else
+        {
+            return RedirectToAction("Index", "User", new { username = Request.Form["username"] });
+        }
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
