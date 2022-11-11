@@ -88,6 +88,13 @@ namespace tsp_shared
             return new Cycle(vertexesCopy);
         }
 
+        public Cycle GetCopy()
+        {
+            var vertexesCopy = new List<Vertex>(Vertexes);
+
+            return new Cycle(vertexesCopy);
+        }
+
         public double GetMinX()
         {
             return Vertexes.Min(vertex => vertex.Point.X);

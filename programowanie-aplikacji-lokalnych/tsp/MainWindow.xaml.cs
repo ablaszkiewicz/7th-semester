@@ -1,5 +1,6 @@
 ﻿using H.Pipes;
 using H.Pipes.Args;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,18 +40,30 @@ namespace tsp
             InitializeComponent();
             Task.Run(async () => await Server());
 
-            var vertexes = Reader.GetVertexesFromFile("C:\\Users\\Aleksander\\Downloads\\wi29.tsp");
+            InitializeNewSet("C:\\Users\\Aleksander\\Downloads\\wi29.tsp");
+        }
+
+        private void InitializeNewSet(string path)
+        {
+            BestSolution.Text = "0";
+            var vertexes = Reader.GetVertexesFromFile(path);
             cycle = new Cycle(vertexes);
             minX = cycle.GetMinX();
             minY = cycle.GetMinY();
             maxX = cycle.GetMaxX();
             maxY = cycle.GetMaxY();
+            DrawCycle(cycle);
         }
 
         public async Task Server()
         {
             _pipe = new PipeServer<MyMessage>("tsp-task");
             _pipe.MessageReceived += MessageReceivedFromClient;
+            _pipe.ClientConnected += (a, b) =>
+            {
+                Application.Current.Dispatcher.Invoke(() => _pipe.WriteAsync(new MyMessage { Type = MessageType.START, Cycle = cycle, Concurrency = int.Parse(ConcurrencyInput.Text) }));
+            };
+
             await _pipe.StartAsync();
             await Task.Delay(Timeout.InfiniteTimeSpan);
         }
@@ -58,15 +71,28 @@ namespace tsp
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("C:\\Users\\Aleksander\\Desktop\\7th-semester\\programowanie-aplikacji-lokalnych\\tsp-task\\bin\\Debug\\net6.0-windows\\tsp-task.exe");
-            _pipe.ClientConnected += (a, b) =>
-            {
-                _pipe.WriteAsync(new MyMessage { Type = MessageType.START, Cycle = cycle });
-            };
+            
+
+            StartButton.IsEnabled = false;
+            StopButton.IsEnabled = true;
+        }
+
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() => _pipe.WriteAsync(new MyMessage { Type = MessageType.CANCEL }));
+            StartButton.IsEnabled = true;
+            StopButton.IsEnabled = false;
         }
 
         private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            var dialog = new OpenFileDialog();
+
+            if(dialog.ShowDialog() == true)
+            {
+                ChosenFile.Text = dialog.FileName;
+                InitializeNewSet(dialog.FileName);
+            }
         }
 
         private void MessageReceivedFromClient(object sender, ConnectionMessageEventArgs<MyMessage> args)
@@ -76,10 +102,16 @@ namespace tsp
             if(message.Type == MessageType.BEST_SOLUTION)
             {
                 Application.Current.Dispatcher.Invoke(() => DrawCycle(args.Message.Cycle));
+                Application.Current.Dispatcher.Invoke(() => BestSolution.Text = args.Message.Cycle.CalculateTotalDistance().ToString("0.00"));
+                
             }
             else if (message.Type == MessageType.PROGRESS)
             {
                 Application.Current.Dispatcher.Invoke(() => ProgressBar.Value = message.Progress * 100);
+                if (message.Progress > 0.98)
+                {
+                    Application.Current.Dispatcher.Invoke(() => StartButton.IsEnabled = true);
+                }
             }
         }
 

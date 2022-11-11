@@ -8,84 +8,122 @@ using System.Diagnostics;
 using tsp_shared;
 using System.Windows.Documents;
 using System.Collections.Generic;
+using Microsoft.VisualBasic;
 
 namespace tsp_task
 {
     internal class Program
     {
+        static Cycle best = null;
+        static object cycleLock = new object();
+
+        static int progress = 0;
+        static object progressLock = new object();
+
+        static Client client;
+
+        const int FIRST_ITERATIONS = 1000;
+        const int SECOND_ITERATIONS = 1000;
+        static int concurrency;
+        static double lastProgressSent = 0;
+        static CancellationTokenSource cancellationSource = new CancellationTokenSource();
         static void Main(string[] args)
         {
-            var client = new Client("tsp-task");
+            client = new Client("tsp-task");
+
             client.OnMessageReceived += (MyMessage message) =>
             {
-                Console.WriteLine("Starting calculations...");
-                Cycle best = null;
-                var iterationsCount = 1000000;
-
-                for (int i = 0; i < iterationsCount; i++)
+                if(message.Type == MessageType.CANCEL)
                 {
-                    var a = message.Cycle.GetShuffledCopy();
-                    var b = message.Cycle.GetShuffledCopy();
+                    cancellationSource.Cancel();
+                    Console.WriteLine("Cancelled");
+                }
+                else
+                {
+                    Console.WriteLine($"Running {message.Concurrency} tasks");
 
-                    var mutatedA = PMX.Mutate(a, b);
-                    var mutatedB = PMX.Mutate(b, a);
-
-                    var localBest = mutatedA.CalculateTotalDistance() < mutatedB.CalculateTotalDistance() ? mutatedA : mutatedB;
-
-                    //Console.WriteLine(localBest + " = " + localBest.CalculateTotalDistance());
-
-                    if (i % 100 == 0)
+                    concurrency = message.Concurrency;
+                    for (int i = 0; i < message.Concurrency; i++)
                     {
-                        client.SendMessage(new MyMessage { Type = MessageType.PROGRESS, Progress = (double)i / iterationsCount });
-                    }
-
-                    if (best == null || localBest.CalculateTotalDistance() < best.CalculateTotalDistance())
-                    {
-                        best = localBest;
-                        client.SendMessage(new MyMessage { Type = MessageType.BEST_SOLUTION, Cycle = best });
+                        try
+                        {
+                            Task.Run(() => DoWork(message, client, cancellationSource.Token));
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Cancelled");
+                        }
                     }
                 }
             };
 
+            while (true) { }
+        }
+        
+        static void DoWork(MyMessage message, Client client, CancellationToken token)
+        {
+            Console.WriteLine("Starting calculations...");
 
-            //var pointsList1 = new List<int>() { 3, 5, 1, 8, 2, 6, 7, 4, 9 };
-            //var pointsList2 = new List<int>() { 1, 6, 2, 7, 4, 8, 5, 9, 3 };
-
-            //var vertexList1 = new List<Vertex>();
-            //var vertexList2 = new List<Vertex>();
-
-            //foreach (var number in pointsList1)
-            //{
-            //    vertexList1.Add(new Vertex(number, new Vector2(number, number)));
-            //}
-
-            //foreach (var number in pointsList2)
-            //{
-            //    vertexList2.Add(new Vertex(number, new Vector2(number, number)));
-            //}
-
-            //var cycleA = new Cycle(vertexList1);
-            //var cycleB = new Cycle(vertexList2);
-
-
-
-            //var mutatedA = PMX.Mutate(cycleA, cycleB);
-            //var mutatedB = PMX.Mutate(cycleB, cycleA);
-
-            //Console.WriteLine(cycleA);
-            //Console.WriteLine(mutatedA);
-            //Console.WriteLine();
-            //Console.WriteLine(cycleB);
-            //Console.WriteLine(mutatedB);
-
-            for (int i = 0; i < 128931238; i++)
+            for (int i = 0; i < FIRST_ITERATIONS; i++)
             {
-                var sum = 23 + i;
+                var a = message.Cycle.GetShuffledCopy();
+                var b = message.Cycle.GetShuffledCopy();
+
+                var mutatedA = Transformations.PMXMutate(a, b);
+                var mutatedB = Transformations.PMXMutate(b, a);
+
+
+                for (int j = 0; j < SECOND_ITERATIONS; j++)
+                {
+                    if(token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                    }
+
+                    //iteration++;
+                    var optedA = Transformations.ThreeOpt(mutatedA);
+                    var optedB = Transformations.ThreeOpt(mutatedB.GetCopy());
+
+                    var localBest = optedA.CalculateTotalDistance() < optedB.CalculateTotalDistance() ? optedA : optedB;
+
+                    if (j % 100 == 0)
+                    {
+                        //client.SendMessage(new MyMessage { Type = MessageType.PROGRESS, Progress = (double)iteration / totalIterations });
+                        UpdateProgress(100);
+                    }
+
+                    lock (cycleLock)
+                    {
+                        if (best == null || localBest.CalculateTotalDistance() < best.CalculateTotalDistance())
+                        {
+                            best = localBest.GetCopy();
+                            client.SendMessage(new MyMessage { Type = MessageType.BEST_SOLUTION, Cycle = best });
+                        }
+                    }
+                }
             }
 
-            //client.SendMessage(new MyMessage { Cycle = mutatedA });
+            Console.WriteLine("Finished calculations");
+        }
 
-            while (true) { }
+        static void UpdateProgress(int amount)
+        {
+            lock (progressLock)
+            {
+                progress+=amount;
+                var progressComputed = (double)progress / (FIRST_ITERATIONS * SECOND_ITERATIONS * concurrency);
+
+                if (progressComputed - lastProgressSent > 0.01)
+                {
+                    client.SendMessage(new MyMessage { Type = MessageType.PROGRESS, Progress = progressComputed });
+                    lastProgressSent = progressComputed;
+                }
+
+                if (progressComputed == 1)
+                {
+                    Environment.Exit(0);
+                }
+            }
         }
     }
 }

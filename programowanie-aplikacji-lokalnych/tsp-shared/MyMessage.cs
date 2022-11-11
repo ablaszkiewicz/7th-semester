@@ -7,6 +7,8 @@
         public MessageType Type { get; set; }
         
         public double Progress { get; set; }
+
+        public int Concurrency { get; set; }
     }
 
     [Serializable]
@@ -14,6 +16,7 @@
     {
         START,
         PROGRESS,
-        BEST_SOLUTION
+        BEST_SOLUTION,
+        CANCEL
     }
 }

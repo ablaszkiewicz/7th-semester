@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace tsp_shared
 {
-    public class PMX
+    public class Transformations
     {
-        public static Cycle FirstStep(Cycle cycleA, Cycle cycleB)
+        public static Cycle PMXFirstStep(Cycle cycleA, Cycle cycleB)
         {
             var random = new Random();
             var resultList = new List<Vertex>(new Vertex[cycleA.Length]);
@@ -25,7 +25,7 @@ namespace tsp_shared
             return resultCycle;
         }
 
-        public static Cycle SecondStep(Cycle cycleA, Cycle cycleB, Cycle midCycle)
+        public static Cycle PMXSecondStep(Cycle cycleA, Cycle cycleB, Cycle midCycle)
         {
             for (int i = 0; i < cycleB.Length; i++)
             {
@@ -41,12 +41,30 @@ namespace tsp_shared
             return midCycle;
         }
 
-        public static Cycle Mutate(Cycle cycleA, Cycle cycleB)
+        public static Cycle PMXMutate(Cycle cycleA, Cycle cycleB)
         {
-            var step1 = FirstStep(cycleA, cycleB);
-            var step2 = SecondStep(cycleA, cycleB, step1);
+            var step1 = PMXFirstStep(cycleA, cycleB);
+            var step2 = PMXSecondStep(cycleA, cycleB, step1);
 
             return step2;
+        }
+
+        public static Cycle ThreeOpt(Cycle cycle)
+        {
+            var random = new Random();
+            var randomPosition = random.Next(0, cycle.Length - 3);
+
+            var vertex1 = cycle.GetVertexAt(randomPosition);
+            var vertex2 = cycle.GetVertexAt(randomPosition + 1);
+            var vertex3 = cycle.GetVertexAt(randomPosition + 2);
+
+            var newCycle = new Cycle(cycle.Vertexes);
+
+            newCycle.Vertexes[randomPosition] = vertex2;
+            newCycle.Vertexes[randomPosition + 1] = vertex3;
+            newCycle.Vertexes[randomPosition + 2] = vertex1;
+
+            return newCycle;
         }
     }
 }
