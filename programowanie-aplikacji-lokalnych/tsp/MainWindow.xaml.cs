@@ -35,6 +35,7 @@ namespace tsp
         private double maxX;
         private double maxY;
         private Cycle cycle;
+        private ComputeMethod chosenMethod = ComputeMethod.TASK;
         public MainWindow()
         {
             InitializeComponent();
@@ -70,7 +71,15 @@ namespace tsp
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("C:\\Users\\Aleksander\\Desktop\\7th-semester\\programowanie-aplikacji-lokalnych\\tsp-task\\bin\\Debug\\net6.0-windows\\tsp-task.exe");
+            if (chosenMethod == ComputeMethod.TASK)
+            {
+                Process.Start("C:\\Users\\Aleksander\\Desktop\\7th-semester\\programowanie-aplikacji-lokalnych\\tsp-task\\bin\\Debug\\net6.0-windows\\tsp-task.exe");
+            }
+            else
+            {
+                Process.Start("C:\\Users\\Aleksander\\Desktop\\7th-semester\\programowanie-aplikacji-lokalnych\\tsp-thread\\bin\\Debug\\net6.0-windows\\tsp-thread.exe");
+            }
+            
             
 
             StartButton.IsEnabled = false;
@@ -188,5 +197,21 @@ namespace tsp
         {
             return Utilities.StrangeClamp(y, minY, maxY, 0, MyCanvas.ActualHeight);
         }
+
+        private void ThreadsRadio_Click(object sender, RoutedEventArgs e)
+        {
+            chosenMethod = ComputeMethod.THREAD;
+        }
+
+        private void TasksRadio_Click(object sender, RoutedEventArgs e)
+        {
+            chosenMethod = ComputeMethod.TASK;
+        }
+    }
+
+    public enum ComputeMethod
+    {
+        THREAD,
+        TASK
     }
 }
