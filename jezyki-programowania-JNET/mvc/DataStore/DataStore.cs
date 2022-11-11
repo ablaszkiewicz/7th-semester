@@ -70,10 +70,19 @@
         }
         public void RemoveUser(string username)
         {
-            var user = _users.FirstOrDefault(user => user.Username == username);
-            if (user != null)
+            foreach (var user in _users)
             {
-                _users.Remove(user);
+                var friend = user.Friends.FirstOrDefault(friend => friend.Username == username);
+                if (friend != null)
+                {
+                    user.Friends.Remove(friend);
+                }
+            }
+
+            var userTemp = _users.FirstOrDefault(user => user.Username == username);
+            if (userTemp != null)
+            {
+                _users.Remove(userTemp);
             }
         }
     }
