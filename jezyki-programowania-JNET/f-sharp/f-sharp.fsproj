@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>f_sharp</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Money.fs" />
+    <Compile Include="Transaction.fs" />
+    <Compile Include="Person.fs" />
+    <Compile Include="LoyaltyStatus.fs" />
+    <Compile Include="Client.fs" />
+    <Compile Include="Shop.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+</Project>
