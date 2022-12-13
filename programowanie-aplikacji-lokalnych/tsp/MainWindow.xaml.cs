@@ -35,6 +35,7 @@ namespace tsp
         private double maxX;
         private double maxY;
         private Cycle cycle;
+        private Cycle best = new Cycle(new List<Vertex>());
         private ComputeMethod chosenMethod = ComputeMethod.TASK;
         public MainWindow()
         {
@@ -54,6 +55,7 @@ namespace tsp
             maxX = cycle.GetMaxX();
             maxY = cycle.GetMaxY();
             DrawCycle(cycle);
+            best = cycle;
         }
 
         public async Task Server()
@@ -79,11 +81,20 @@ namespace tsp
             {
                 Process.Start("C:\\Users\\Aleksander\\Desktop\\7th-semester\\programowanie-aplikacji-lokalnych\\tsp-thread\\bin\\Debug\\net6.0-windows\\tsp-thread.exe");
             }
-            
-            
 
+
+            DelayedStop();
             StartButton.IsEnabled = false;
             StopButton.IsEnabled = true;
+        }
+
+        private async Task DelayedStop()
+        {
+            var miliseconds = DurationInput.Text == "" ? 0 : int.Parse(DurationInput.Text);
+            await Task.Delay(miliseconds * 1000);
+            Application.Current.Dispatcher.Invoke(() => _pipe.WriteAsync(new MyMessage { Type = MessageType.CANCEL }));
+            StartButton.IsEnabled = true;
+            StopButton.IsEnabled = false;
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
@@ -110,9 +121,9 @@ namespace tsp
             
             if(message.Type == MessageType.BEST_SOLUTION)
             {
-                Application.Current.Dispatcher.Invoke(() => DrawCycle(args.Message.Cycle));
+                Application.Current.Dispatcher.Invoke(() => {DrawCycle(args.Message.Cycle);});
                 Application.Current.Dispatcher.Invoke(() => BestSolution.Text = args.Message.Cycle.CalculateTotalDistance().ToString("0.00"));
-                
+                Application.Current.Dispatcher.Invoke(() => { myList.ItemsSource = args.Message.Cycle.Vertexes; });
             }
             else if (message.Type == MessageType.PROGRESS)
             {

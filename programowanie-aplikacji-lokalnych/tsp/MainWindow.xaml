@@ -5,11 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:tsp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="810">
+        Title="MainWindow" Height="450" Width="1100">
     <Grid>
-        <Canvas Name="MyCanvas" Margin="308,5,5,5" Background="#FFAAAAAA"/>
-        <StackPanel Margin="5,5,518,5">
-            
+        <Canvas Name="MyCanvas" Margin="303,5,222,5" Background="#FFAAAAAA"/>
+        <StackPanel Margin="5,5,797,5">
             <Border BorderBrush="Black" BorderThickness="1" Padding="10" Height="52">
                 <DockPanel LastChildFill="False">
                     <TextBlock Name="ChosenFile" TextWrapping="Wrap" Text="Choose a file first" DockPanel.Dock="Left" Width="170" VerticalAlignment="Center"/>
@@ -28,11 +27,13 @@
                         <TextBlock TextWrapping="Wrap" Text="Best solution" DockPanel.Dock="Left"/>
                         <TextBlock Name="BestSolution" TextWrapping="Wrap" Text="0" DockPanel.Dock="Right"/>
                     </DockPanel>
-                    <!--<DockPanel LastChildFill="False" Margin="0,10,0,0">
-                        <TextBlock TextWrapping="Wrap" Text="Solutions analyzed" DockPanel.Dock="Left"/>
-                        <TextBlock TextWrapping="Wrap" Text="1337312894" DockPanel.Dock="Right"/>
-                    </DockPanel>-->
                 </StackPanel>
+            </Border>
+            <Border BorderBrush="Black" BorderThickness="1" Padding="10" Height="52" Margin="0,5,0,0" >
+                <DockPanel LastChildFill="False">
+                    <TextBlock TextWrapping="Wrap" Text="Maximum duration in seconds" DockPanel.Dock="Left"/>
+                    <TextBox Name="DurationInput" TextWrapping="Wrap" Text="10" Width="84" DockPanel.Dock="Right"/>
+                </DockPanel>
             </Border>
             <Border BorderBrush="Black" BorderThickness="1" Padding="10"  Margin="0,5,0,0" >
                 <DockPanel LastChildFill="False">
@@ -49,8 +50,20 @@
             <Border BorderBrush="Black" BorderThickness="1" Padding="10"  Margin="0,5,0,0" >
                 <ProgressBar Name="ProgressBar" Height="20" />
             </Border>
-            
         </StackPanel>
-
+        <StackPanel Margin="861,5,10,5">
+            <Border BorderBrush="Black" BorderThickness="1" Padding="10" Height="52">
+                <TextBlock TextWrapping="Wrap" Text="List" DockPanel.Dock="Left"/>
+            </Border>
+            <ListView  Name="myList" ScrollViewer.VerticalScrollBarVisibility="Visible" Height="255" Width="226">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Num" Width="30" DisplayMemberBinding="{Binding Number}" />
+                        <GridViewColumn Header="X" Width="80" DisplayMemberBinding="{Binding Point.X}" />
+                        <GridViewColumn Header="Y" Width="80" DisplayMemberBinding="{Binding Point.Y}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
     </Grid>
 </Window>
